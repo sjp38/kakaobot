@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -11,6 +12,16 @@ import (
 
 type keyboard struct {
 	Type string `json:"type"`
+}
+
+type message struct {
+	Userkey string `json:"user_key"`
+	Type    string `json:"type"`
+	Content string `json:"content"`
+}
+
+type response struct {
+	Message string `json:"message"`
 }
 
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
@@ -21,6 +32,25 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 			Type: "keyboard"})
 		if err != nil {
 			log.Fatal("Failed to marshal keybaord: %s", err)
+		}
+		fmt.Fprintf(w, string(resp))
+		return
+	}
+
+	if r.Method == "POST" && r.URL.Path == "/kakaobot/message" {
+		body, err := ioutil.ReadAll(r.Body)
+		r.Body.Close()
+		if err != nil {
+			log.Fatal("Failed to read body of /message: %s", err)
+		}
+		var msg message
+		if err := json.Unmarshal(body, &msg); err != nil {
+			log.Fatal("Failed to unmarshal body of /message: %s %s", err, string(body))
+		}
+		resp, err := json.Marshal(response{
+			Message: msg.Content})
+		if err != nil {
+			log.Fatal("Failed to marshal response: %s", err)
 		}
 		fmt.Fprintf(w, string(resp))
 		return
