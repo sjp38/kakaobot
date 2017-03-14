@@ -21,8 +21,12 @@ type message struct {
 	Content string `json:"content"`
 }
 
+type resptext struct {
+	Text string `json:"text"`
+}
+
 type response struct {
-	Message string `json:"message"`
+	Message resptext `json:"message"`
 }
 
 type user struct {
@@ -53,7 +57,8 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Fatal("Failed to unmarshal body of /message: %s %s", err, string(body))
 		}
 		resp, err := json.Marshal(response{
-			Message: msg.Content})
+			Message: resptext{
+				Text: msg.Content}})
 		if err != nil {
 			log.Fatal("Failed to marshal response: %s", err)
 		}
