@@ -16,7 +16,7 @@ type keyboard struct {
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(os.Stdout, "received %s %s",
 		r.Method, html.EscapeString(r.URL.Path))
-	if r.URL.Path == "/kakaobot/keyboard" {
+	if r.Method == "GET" && r.URL.Path == "/kakaobot/keyboard" {
 		resp, err := json.Marshal(keyboard{
 			Type: "keyboard"})
 		if err != nil {
