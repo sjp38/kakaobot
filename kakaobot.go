@@ -24,6 +24,10 @@ type response struct {
 	Message string `json:"message"`
 }
 
+type user struct {
+	UserKey string	`json:"user_key"`
+}
+
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(os.Stdout, "received %s %s\n",
 		r.Method, html.EscapeString(r.URL.Path))
@@ -53,6 +57,20 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Fatal("Failed to marshal response: %s", err)
 		}
 		fmt.Fprintf(w, string(resp))
+		return
+	}
+
+	if r.Method == "POST" && r.URL.Path == "/kakaobot/friend" {
+		body, err := ioutil.ReadAll(r.Body)
+		r.Body.Close()
+		if err != nil {
+			log.Fatal("Failed to read body of /friend: %s", err)
+		}
+		var usr user
+		if err := json.Unmarshal(body, &usr); err != nil {
+			log.Fatal("Failed to unmarshal body of /friend: %s %s", err, string(body))
+		}
+		fmt.Fprintf(os.Stdout, "Fried %s joined!\n", usr.UserKey)
 		return
 	}
 }
