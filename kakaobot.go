@@ -25,7 +25,7 @@ type response struct {
 }
 
 type user struct {
-	UserKey string	`json:"user_key"`
+	UserKey string `json:"user_key"`
 }
 
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
