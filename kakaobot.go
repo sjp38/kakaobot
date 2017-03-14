@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -78,17 +77,17 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 		if err := json.Unmarshal(body, &usr); err != nil {
 			log.Fatal("Failed to unmarshal body of /friend: %s %s", err, string(body))
 		}
-		fmt.Fprintf(os.Stdout, "Fried %s joined!\n", usr.UserKey)
+		log.Printf("Fried %s joined!\n", usr.UserKey)
 		return
 	}
 
 	if r.Method == "DELETE" {
 		tokens := strings.Split(r.URL.Path, ":")
 		if tokens[0] == "/kakaobot/friend/" {
-			fmt.Fprintf(os.Stdout, "Friend %s banned me!\n", tokens[1])
+			log.Printf("Friend %s banned me!\n", tokens[1])
 		}
 		if tokens[0] == "/kakaobot/chat_room/" {
-			fmt.Fprintf(os.Stdout, "Friend %s leaved chat room!\n", tokens[1])
+			log.Printf("Friend %s leaved chat room!\n", tokens[1])
 		}
 		return
 	}
@@ -98,5 +97,5 @@ func main() {
 	http.HandleFunc("/kakaobot/", handleHTTP)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
-	fmt.Printf("buy\n")
+	log.Printf("buy\n")
 }
