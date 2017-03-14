@@ -38,7 +38,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 		r.Method, html.EscapeString(r.URL.Path))
 	if r.Method == "GET" && r.URL.Path == "/kakaobot/keyboard" {
 		resp, err := json.Marshal(keyboard{
-			Type: "keyboard"})
+			Type: "text"})
 		if err != nil {
 			log.Fatal("Failed to marshal keybaord: %s", err)
 		}
