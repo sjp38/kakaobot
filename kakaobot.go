@@ -5,11 +5,16 @@ import (
 	"html"
 	"log"
 	"net/http"
+	"os"
 )
 
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "received %s %s",
+	fmt.Fprintf(os.Stdout, "received %s %s",
 		r.Method, html.EscapeString(r.URL.Path))
+	if r.URL.Path == "/kakaobot/keyboard" {
+		fmt.Fprintf(w, "{\n\"type\":\"text\"\n}")
+		return
+	}
 }
 
 func main() {
