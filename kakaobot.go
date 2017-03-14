@@ -30,7 +30,7 @@ type user struct {
 }
 
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(os.Stdout, "received %s %s\n",
+	log.Printf("received %s %s\n",
 		r.Method, html.EscapeString(r.URL.Path))
 	if r.Method == "GET" && r.URL.Path == "/kakaobot/keyboard" {
 		resp, err := json.Marshal(keyboard{
