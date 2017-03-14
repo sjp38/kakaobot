@@ -52,6 +52,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal("Failed to read body of /message: %s", err)
 		}
+		log.Printf("body: %s\n", string(body))
 		var msg message
 		if err := json.Unmarshal(body, &msg); err != nil {
 			log.Fatal("Failed to unmarshal body of /message: %s %s", err, string(body))
@@ -62,6 +63,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal("Failed to marshal response: %s", err)
 		}
+		log.Printf("send %s\n", string(resp))
 		fmt.Fprintf(w, string(resp))
 		return
 	}
