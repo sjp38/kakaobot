@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html"
 	"log"
@@ -8,11 +9,20 @@ import (
 	"os"
 )
 
+type keyboard struct {
+	Type string `json:"type"`
+}
+
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(os.Stdout, "received %s %s",
 		r.Method, html.EscapeString(r.URL.Path))
 	if r.URL.Path == "/kakaobot/keyboard" {
-		fmt.Fprintf(w, "{\n\"type\":\"text\"\n}")
+		resp, err := json.Marshal(keyboard{
+			Type: "keyboard"})
+		if err != nil {
+			log.Fatal("Failed to marshal keybaord: %s", err)
+		}
+		fmt.Fprintf(w, string(resp))
 		return
 	}
 }
