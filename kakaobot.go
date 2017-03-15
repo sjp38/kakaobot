@@ -57,10 +57,12 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Fatal("Failed to unmarshal body of /message: %s",
 				err)
 		}
+		rmsg := strings.Join(strings.Fields(msg.Content), "... ") +
+				"...???"
 		// Just echo received message.
 		resp, err := json.Marshal(response{
 			Message: resptext{
-				Text: msg.Content}})
+				Text: rmsg}})
 		if err != nil {
 			log.Fatal("Failed to marshal response: %s", err)
 		}
