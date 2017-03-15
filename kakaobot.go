@@ -39,7 +39,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 		resp, err := json.Marshal(keyboard{
 			Type: "text"})
 		if err != nil {
-			log.Fatal("Failed to marshal keybaord: %s", err)
+			log.Fatal("Failed to marshal /keybaord: %s", err)
 		}
 		fmt.Fprintf(w, string(resp))
 		return
@@ -54,8 +54,10 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Printf("body: %s\n", string(body))
 		var msg message
 		if err := json.Unmarshal(body, &msg); err != nil {
-			log.Fatal("Failed to unmarshal body of /message: %s %s", err, string(body))
+			log.Fatal("Failed to unmarshal body of /message: %s",
+				err)
 		}
+		// Just echo received message.
 		resp, err := json.Marshal(response{
 			Message: resptext{
 				Text: msg.Content}})
@@ -73,11 +75,13 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal("Failed to read body of /friend: %s", err)
 		}
+		log.Printf("body: %s\n", string(body))
 		var usr user
 		if err := json.Unmarshal(body, &usr); err != nil {
-			log.Fatal("Failed to unmarshal body of /friend: %s %s", err, string(body))
+			log.Fatal("Failed to unmarshal body of /friend: %s",
+				err)
 		}
-		log.Printf("Fried %s joined!\n", usr.UserKey)
+		log.Printf("Friend %s joined!\n", usr.UserKey)
 		return
 	}
 
