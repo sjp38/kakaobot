@@ -24,9 +24,10 @@ $ kakaobot
 ```
 
 Second command will start `kakaobot` on your localhost.  It works as an HTTP
-server listening on `localhost:8080/kakaobot`.  You can setup your Plus Friend
-to be connected with your `kakaobot` instance via Yellow ID control web page
-[4].
+server listening on `localhost:8080/kakaobot`  (Yes, it is using hard-coded
+port and url for now.  You could change it from your forked code if you want).
+You can setup your Plus Friend to be connected with your `kakaobot` instance
+via Yellow ID control web page [4].
 
 
 Copyright
