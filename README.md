@@ -37,5 +37,7 @@ References
 ==========
 
 [1] https://github.com/plusfriend/auto_reply
+
 [2] https://yellowid.kakao.com/
+
 [3] https://golang.org/doc/install
