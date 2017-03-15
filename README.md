@@ -1,8 +1,8 @@
 kakaobot
 ========
 
-This is a simple chat bot Golang implementation based on Kakao Plus-Friend
-auto-reply API [1].
+This is a simple chat bot based on Kakao Plus-Friend auto-reply API [1] using
+Go language.
 
 Kakao has Yellow ID [2] system, the special ID system for service providers
 based on Kakaotalk.  Once you get the ID, you can create a virtual account, aka
