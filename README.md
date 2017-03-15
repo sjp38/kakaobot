@@ -15,8 +15,8 @@ automatically.  This implementation is using the API.
 HOWTO
 =====
 
-First, get an Kakaotalk Yellow ID [2] from Kakao (This may consume few days)
-and enable auto-reply function of it.  Then, set up Golang environment [3].
+First, get an Kakaotalk Yellow ID [2] from Kakao (This may consume few days).
+Then, set up Golang environment [3].
 Finally, enter next commands from your shell:
 ```
 $ go get https://github.com/sjp38/kakaobot
@@ -24,8 +24,9 @@ $ kakaobot
 ```
 
 Second command will start `kakaobot` on your localhost.  It works as an HTTP
-server listening on `localhost:8080/kakaobot`.  You can connect it with your
-Yellow ID by setting the app URL field from the Yellow ID setup web page.
+server listening on `localhost:8080/kakaobot`.  You can setup your Plus Friend
+to be connected with your `kakaobot` instance via Yellow ID control web page
+[4].
 
 
 Copyright
@@ -48,3 +49,5 @@ References
 [2] https://yellowid.kakao.com/
 
 [3] https://golang.org/doc/install
+
+[4] http://yellowid.tistory.com/259
