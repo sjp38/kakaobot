@@ -58,7 +58,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 				err)
 		}
 		rmsg := strings.Join(strings.Fields(msg.Content), "... ") +
-				"...???"
+			"...???"
 		// Just echo received message.
 		resp, err := json.Marshal(response{
 			Message: resptext{
