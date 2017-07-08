@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os/exec"
 	"strings"
 )
 
@@ -30,6 +31,26 @@ type response struct {
 
 type user struct {
 	UserKey string `json:"user_key"`
+}
+
+func msgFor(tokens []string) string {
+	if tokens[0] == "ex" {
+		if len(tokens) < 2 {
+			return "You forgot command."
+		}
+		allowed, ok := executables[tokens[1]]
+		if !ok || !allowed {
+			return "It cannot be executed."
+		}
+
+		out, err := exec.Command("./" + tokens[1], tokens[2:]...).Output()
+		if err != nil {
+			return "Failed to execute the command."
+		}
+		return string(out)
+	}
+	// Just echo received message.
+	return strings.Join(tokens, "... ") + "...???"
 }
 
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
@@ -57,9 +78,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Fatal("Failed to unmarshal body of /message: %s",
 				err)
 		}
-		rmsg := strings.Join(strings.Fields(msg.Content), "... ") +
-			"...???"
-		// Just echo received message.
+		rmsg := msgFor(strings.Fields(msg.Content))
 		resp, err := json.Marshal(response{
 			Message: resptext{
 				Text: rmsg}})
@@ -99,7 +118,43 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+var executables = map[string]bool{
+	"ls":false,
+}
+
+func loadExecutables(filepath string) bool {
+	c, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		fmt.Printf("failed to read executables from file: %s\n", err)
+		return false
+	}
+	if err := json.Unmarshal(c, &executables); err == nil {
+		fmt.Printf("failed to unmarshal executables: %s\n", err)
+		return false
+	}
+
+	return true
+}
+
+func saveExecutables(filepath string) {
+	bytes, err := json.Marshal(executables)
+	if err != nil {
+		fmt.Printf("failed to marshal executables: %s\n", err)
+		return
+	}
+
+	if err := ioutil.WriteFile(filepath, bytes, 0600); err != nil {
+		fmt.Printf("failed to writre executables: %s\n", err)
+		return
+	}
+}
+
 func main() {
+	exeFile := "executables.json"
+	if !loadExecutables(exeFile) {
+		saveExecutables(exeFile)
+	}
+
 	http.HandleFunc("/kakaobot/", handleHTTP)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
