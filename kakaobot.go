@@ -78,7 +78,11 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Fatal("Failed to unmarshal body of /message: %s",
 				err)
 		}
-		rmsg := msgFor(strings.Fields(msg.Content))
+		message := rawMsgToMessageKey(msg.Content)
+		if message == "exception" {
+			message = msg.Content
+		}
+		rmsg := msgFor(strings.Fields(message))
 		resp, err := json.Marshal(response{
 			Message: resptext{
 				Text: rmsg}})
@@ -118,8 +122,17 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var executables = map[string]bool{
-	"ls": false,
+var rawMsgToMsgKeyMap = map[string]string{
+	"hi": "hi",
+	"hello": "hi",
+}
+
+func rawMsgToMessageKey(rawMessage string) string {
+	key, ok := rawMsgToMsgKeyMap[rawMessage]
+	if !ok {
+		return "exception"
+	}
+	return key
 }
 
 func loadExecutables(filepath string) bool {
@@ -136,6 +149,36 @@ func loadExecutables(filepath string) bool {
 	return true
 }
 
+func loadMsgToKey(filepath string) bool {
+	c, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		fmt.Printf("failed to read messages to keys: %s\n", err)
+		return false
+	}
+	if err := json.Unmarshal(c, &rawMsgToMsgKeyMap); err != nil {
+		fmt.Printf("failed to unmarshal messages: %s\n", err)
+		return false
+	}
+	return true
+}
+
+var executables = map[string]bool{
+	"ls": false,
+}
+
+func saveMsgToKey(filepath string) {
+	bytes, err := json.Marshal(rawMsgToMsgKeyMap)
+	if err != nil {
+		fmt.Printf("failed to marshal messages: %s\n", err)
+		return
+	}
+
+	if err := ioutil.WriteFile(filepath, bytes, 0600); err != nil {
+		fmt.Printf("failed to write messages: %s\n", err)
+		return
+	}
+}
+
 func saveExecutables(filepath string) {
 	bytes, err := json.Marshal(executables)
 	if err != nil {
@@ -150,6 +193,11 @@ func saveExecutables(filepath string) {
 }
 
 func main() {
+	msgtoKeyFile := "msg_to_key.json"
+	if !loadMsgToKey(msgtoKeyFile) {
+		saveMsgToKey(msgtoKeyFile)
+	}
+
 	exeFile := "executables.json"
 	if !loadExecutables(exeFile) {
 		saveExecutables(exeFile)
