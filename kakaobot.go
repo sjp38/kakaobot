@@ -43,7 +43,7 @@ func msgFor(tokens []string) string {
 			return "It cannot be executed."
 		}
 
-		out, err := exec.Command("./" + tokens[1], tokens[2:]...).Output()
+		out, err := exec.Command("./"+tokens[1], tokens[2:]...).Output()
 		if err != nil {
 			return "Failed to execute the command."
 		}
@@ -119,7 +119,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 var executables = map[string]bool{
-	"ls":false,
+	"ls": false,
 }
 
 func loadExecutables(filepath string) bool {
