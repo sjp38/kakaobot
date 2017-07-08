@@ -123,7 +123,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 var rawMsgToMsgKeyMap = map[string]string{
-	"hi": "hi",
+	"hi":    "hi",
 	"hello": "hi",
 }
 
