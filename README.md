@@ -30,12 +30,6 @@ You can setup your Plus Friend to be connected with your `kakaobot` instance
 via Yellow ID control web page [4].
 
 
-Copyright
-=========
-
-GPL v3
-
-
 Author
 ======
 
